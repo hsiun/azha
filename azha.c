@@ -1,5 +1,7 @@
 #include "utils.h"
 
+void str_echo(int sockfd);
+
 int main(int argc, char **argv)
 {
     //使用Fork模型的并发服务器
@@ -31,4 +33,17 @@ int main(int argc, char **argv)
     return (0);
 }
 
+void str_echo(int sockfd)
+{
+    ssize_t n;
+    char buf[MAXLINE];
 
+again:
+    while ( (n = read(sockfd, buf, MAXLINE)) > 0)
+        writen(sockfd, buf, n);
+
+    if (n < 0 && errno == EINTR)
+        goto again;
+    else if (n < 0)
+        server_error("str_echo: read error");
+}
