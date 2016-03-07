@@ -1,4 +1,4 @@
-# azha所使用的工具函数集
+// azha所使用的工具函数集
 
 #ifndef __UTILS_H
 #define __UTILS_H
@@ -25,6 +25,8 @@
 /*****************************
  * IO处理
  ****************************/
+char *Fgets(char *ptr, int n, FILE *stream);
+int Fputs(const char *ptr, FILE *stream);
 ssize_t readn(int filedes, void *buff, size_t nbytes);            //从描述符中读入nbytes个字符到buff中
 ssize_t writen(int filedes, const void *buff, size_t nbytes);     //从buff中写入nbytes个字符到描述符中
 ssize_t readline(int filedes, void *buff, size_t maxlen);         //行处理，极慢

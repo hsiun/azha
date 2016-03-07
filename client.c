@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 
     str_cli(stdin, sockfd);
 
-    exit(0);
+    return (0);
 }
 
 void str_cli(FILE *fp, int sockfd)

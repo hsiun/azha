@@ -78,6 +78,25 @@ ssize_t readline(int fd, void *vptr, size_t maxlen)
 /*****************
  * 包裹函数
  ******************/
+/* 系统IO包裹函数 */
+char *Fgets(char *ptr, int n, FILE *stream)
+{
+    char *rptr;
+    if ( ( (rptr = fgets(ptr, n, stream)) == NULL) && ferror(stream))
+        server_error("Fgets error");
+
+    return rptr;
+}
+
+int Fputs(const char *ptr, FILE *stream)
+{
+    int rf;
+    if ( (rf = fputs(ptr, stream)) == EOF)
+        unix_error("Fputs error");
+
+    return rf;
+}
+
 /* 网络包裹函数 */
 int Socket(int family, int type, int protocol)
 {
@@ -143,6 +162,8 @@ int Close(int fd)
     int rc;
     if ( (rc = close(fd)) < 0)
         unix_error("Close error");
+
+    return rc;
     
 }
 /* 错误处理函数 */
