@@ -136,6 +136,15 @@ int Listen(int s, int backlog)
     return rc;
 }
 
+void Getnameinfo(const struct sockaddr *sa, socklen_t salen, char *host,
+        size_t hostlen, char *serv, size_t servlen, int flags)
+{
+    int rc;
+    if ( (rc = getnameinfo(sa, salen, host, hostlen, serv, 
+                    servlen, flags)) != 0)
+        unix_error("Getnameinfo error");
+}
+
 int Accept(int sockfd, struct sockaddr *cliaddr, socklen_t *addr_len)
 {
     int rc;

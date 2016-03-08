@@ -7,6 +7,7 @@
 #include <sys/types.h>  //socket的类型
 #include <arpa/inet.h> //inet(3)函数
 #include <sys/wait.h>
+#include <netdb.h>     //getnameinfo函数
 #include <unistd.h>    //unix函数集合
 #include <errno.h>     //错误处理，错误码
 #include <signal.h>    //信号处理
@@ -21,6 +22,14 @@
 #define LISTENQ (1024)
 #define MAXLINE (8192)
 #define SERVER_PORT (8800)  
+
+/***************************
+ * 处理HTTP请求，在http_1_0.c文件中实现
+ **************************/
+
+
+
+
 
 /*****************************
  * IO处理
@@ -42,6 +51,8 @@ int Connect(int sockfd, const struct sockaddr *servaddr, socklen_t addrlen);
 int Bind(int sockfd, const struct sockaddr *myaddr, socklen_t addrlen);
 int Listen(int sockfd, int backlog);
 int Accept(int sockfd, struct sockaddr *cliaddr, socklen_t *addrlen);
+void Getnameinfo(const struct sockaddr *sa, socklen_t salen, char *host,
+        size_t hostlen, char * serv, size_t servlen, int flags);
 
 /* 系统 */
 pid_t Fork(void);

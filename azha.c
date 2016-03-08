@@ -8,6 +8,7 @@ int main(int argc, char **argv)
     int listenfd, connfd;         //listenfd监听套接字，connfd连接套接字
     pid_t childpid;               //子进程描述符，用于处理到来的连接
     socklen_t clilen;
+    char hostname[MAXLINE], port[MAXLINE];
     struct sockaddr_in cliaddr, servaddr;  //远程客户的地址和服务器地址
 
     listenfd = Socket(AF_INET, SOCK_STREAM, 0);  //创建监听套接字
@@ -23,6 +24,9 @@ int main(int argc, char **argv)
     for ( ; ; ) {
         clilen = sizeof(cliaddr);
         connfd = Accept(listenfd, (struct sockaddr *) &cliaddr, &clilen);//已连接的通过connfd返回
+        Getnameinfo( (struct sockaddr *) &cliaddr, clilen, hostname, MAXLINE,
+                port, MAXLINE, 0);
+        printf("Accepted connection from (%s, %s)\n", hostname, port);
         if ( ( childpid = Fork()) == 0) {
             Close(listenfd);
             str_echo(connfd);
