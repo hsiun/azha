@@ -23,6 +23,10 @@
 #define MAXLINE (8192)
 #define SERVER_PORT (8800)  
 
+
+/* 用于简化bind(), connect(), 和 accept()函数的调用 */
+typedef struct sockaddr SA;
+
 /***************************
  * 处理HTTP请求，在http_1_0.c文件中实现
  **************************/

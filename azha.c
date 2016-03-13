@@ -37,6 +37,7 @@ int main(int argc, char **argv)
     return (0);
 }
 
+/* 返回输入的服务器代码 */
 void str_echo(int sockfd)
 {
     ssize_t n;
