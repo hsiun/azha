@@ -27,6 +27,33 @@
 /* 用于简化bind(), connect(), 和 accept()函数的调用 */
 typedef struct sockaddr SA;
 
+
+/******************************
+ * 健壮I/O系统（RIO），是一个自行实现的安全io系统
+ *****************************/
+#define RIO_BUFFER 8192
+typedef struct {
+    int rio_fd;      //rio内部缓冲的描述符
+    int rio_cnt;     //内部缓存中没有被读的字节数
+    char *rio_bufptr;//指向缓存中下一个没有被读的字符
+    char rio_buf[RIO_BUFFER]; //rio的缓存区
+} rio_t;
+
+/* RIO函数 */
+ssize_t rio_readn(int fd, void *userbuf, size_t n);
+ssize_t rio_writen(int fd, void *userbuf, size_t n);
+void rio_readinitb(rio_t *rp, int fd); //初始化读入，将fd中的内容读入rio中
+ssize_t rio_readnb(rio_t *rp, void *userbuf, size_t n);
+ssize_t rio_readlineb(rio_t *rp, void *userbuf, size_t maxlen);
+
+/* RIO函数的包裹函数 */
+ssize_t Rio_readn(int fd, void *userbuf, size_t n);
+void Rio_writen(int fd, void *userbuf, size_t n);
+void Rio_readinitb(rio_t *rp, int fd);
+ssize_t Rio_readnb(rio_t *rp, void *usrbuf, size_t n);
+ssize_t Rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen);
+
+
 /***************************
  * 处理HTTP请求，在http_1_0.c文件中实现
  **************************/
