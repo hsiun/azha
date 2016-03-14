@@ -21,6 +21,7 @@
 /* 函数常量定义 */
 #define LISTENQ (1024)
 #define MAXLINE (8192)
+#define MAXBUF  (8192)
 #define SERVER_PORT (8800)  
 
 
@@ -57,9 +58,14 @@ ssize_t Rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen);
 /***************************
  * 处理HTTP请求，在http_1_0.c文件中实现
  **************************/
-
-
-
+void do_http_1_0(int fd);
+void read_requesthdrs(rio_t *rp);
+int parse_uri(char *uri, char *filename, char *cgiargs);
+void server_static(int fd, char *filename, int filesize);
+void get_filetype(char *filename, char *filetype);
+void server_dynamic(int fd, char *filename, char *cgiargs);
+void clienterror(int fd, char *cause, char *errnum, 
+        char *shortmsg, char *longmsg);
 
 
 /*****************************
