@@ -73,10 +73,10 @@ void server_static(int fd, char *filename, int filesize)
 
     //发送响应正文
     srcfd = Open(filename, O_RDONLY, 0);
-    srcp = Mmap(0, filesize, PROT_READ, MAP_RIVATE, srcfd, 0);
+    srcp = Mmap(0, filesize, PROT_READ, MAP_PRIVATE, srcfd, 0);
     Close(srcfd);
     Rio_writen(fd, srcp, filesize);
-    Munmap(srcp, filesize);
+    Munmap(srcp, filesize);    //取消start所指向的映射内存其实地址，length是要取消内存的大小
 }
 
 //从文件名分析文件类型

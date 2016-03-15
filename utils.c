@@ -156,6 +156,22 @@ int Accept(int sockfd, struct sockaddr *cliaddr, socklen_t *addr_len)
 }
 
 /* 系统调用的包裹函数 */
+void *Mmap(void *addr, size_t len, int port, int flags, int fd, off_t offset)
+{
+    void *ptr;
+
+    if ( (ptr = mmap(addr, len, port, flags, fd, offset)) == ((void *) -1))
+        unix_error("Mmap error");
+
+    return (ptr);
+}
+
+void Munmap(void *start, size_t length)
+{
+    if (munmap(start, length) < 0)
+        unix_error("Munmap error");
+}
+
 pid_t Fork(void)
 {
     pid_t pid;
@@ -175,6 +191,42 @@ int Close(int fd)
     return rc;
     
 }
+
+int Dup2(int fd1, int fd2)
+{
+    int rc;
+
+    if ( (rc = dup2(fd1, fd2)) < 0)
+        unix_error("Dup2 error");
+
+    return rc;
+}
+
+int Open(const char *pathname, int flags, mode_t mode)
+{
+    int rc;
+
+    if ( (rc = open(pathname, flags, mode)) < 0)
+        unix_error("Open error");
+    return rc;
+}
+
+pid_t Wait(int *status)
+{
+    pid_t pid;
+
+    if ( (pid = wait(status)) < 0)
+        unix_error("Wait error");
+
+    return pid;
+}
+
+void Execve(const char *filename, char *const argv[], char *const envp[])
+{
+    if (execve(filename, argv, envp) < 0)
+        unix_error("Execve error");
+}
+
 /* 错误处理函数 */
 void unix_error(char *msg)
 {

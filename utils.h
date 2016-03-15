@@ -7,10 +7,14 @@
 #include <sys/types.h>  //socket的类型
 #include <arpa/inet.h> //inet(3)函数
 #include <sys/wait.h>
+#include <sys/stat.h>
+#include <sys/mman.h>  //mummap函数
 #include <netdb.h>     //getnameinfo函数
 #include <unistd.h>    //unix函数集合
 #include <errno.h>     //错误处理，错误码
 #include <signal.h>    //信号处理
+#include <unistd.h>
+#include <fcntl.h>
 
 
 #include <stdio.h>     //标准库io函数
@@ -24,6 +28,8 @@
 #define MAXBUF  (8192)
 #define SERVER_PORT (8800)  
 
+/* 外部变量 */
+extern char **environ; //libc定义的
 
 /* 用于简化bind(), connect(), 和 accept()函数的调用 */
 typedef struct sockaddr SA;
@@ -94,6 +100,12 @@ void Getnameinfo(const struct sockaddr *sa, socklen_t salen, char *host,
 /* 系统 */
 pid_t Fork(void);
 int Close(int sockfd);
+int Dup2(int fd1, int fd2);
+int Open(const char *pathname, int flags, mode_t mode);
+pid_t Wait(int *status);
+void Execve(const char *filename, char *const argv[], char *const envp[]);
+void Munmap(void *start, size_t length);
+void *Mmap(void *addr, size_t len, int port, int flags, int fd, off_t offset);
 
 /* 错误处理 */
 void unix_error(char *msg);
