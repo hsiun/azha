@@ -27,11 +27,13 @@ int main(int argc, char **argv)
         Getnameinfo( (struct sockaddr *) &cliaddr, clilen, hostname, MAXLINE,
                 port, MAXLINE, 0);
         printf("Accepted connection from (%s, %s)\n", hostname, port);
+        
         if ( ( childpid = Fork()) == 0) {
             Close(listenfd);
-            str_echo(connfd);
+            do_http_1_0(connfd);
             exit(0);
         }
+
         Close(connfd);
     }
     return (0);

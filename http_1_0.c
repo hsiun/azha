@@ -10,7 +10,51 @@
  ****************************/
 void do_http_1_0(int fd)
 {
-    //do http request
+    int is_static;
+    struct stat sbuf;
+    char buf[MAXLINE], method[MAXLINE], uri[MAXLINE], version[MAXLINE];
+    char filename[MAXLINE], cgiargs[MAXLINE];
+    rio_t rio;
+
+    /* 读入请求头 */
+    Rio_readinitb(&rio, fd);
+    if (!Rio_readlineb(&rio, buf, MAXLINE)){
+        clienterror(fd, method, "505", "Inner error",
+                "Some Inner error happen");
+        return;
+    }
+    printf("%s", buf);
+    sscanf(buf, "%s %s %s", method, uri, version);
+    if (strcasecmp(method, "GET")) {
+        clienterror(fd, method, "501", "Not Implemented",
+                "Azha dose not implement this method");
+        return ;
+    }
+    read_requesthdrs(&rio);
+
+    /* 从GET请求分解URI */
+    is_static = parse_uri(uri, filename, cgiargs);
+    if (stat(filename, &sbuf) < 0) {
+        clienterror(fd, filename, "404", "Not found",
+                "Tiny couldn't find this file");
+        return ;
+    }
+
+    if (is_static) { //静态内容
+        if (!(S_ISREG(sbuf.st_mode)) || !(S_IRUSR & sbuf.st_mode)) {
+            clienterror(fd, filename, "403", "Forbidden",
+                    "Azha couldn't read the file");
+            return ;
+        }
+        server_static(fd, filename, sbuf.st_size);
+    } else {         //动态内容
+        if (!(S_ISREG(sbuf.st_mode)) || !(S_IRUSR & sbuf.st_mode)) {
+            clienterror(fd, filename, "403", "Forbideen",
+                    "Azha coudn't read the file");
+            return ;
+        }
+        server_dynamic(fd, filename, cgiargs);
+    }
 }
 
 //读取http请求头部
