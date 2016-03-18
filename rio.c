@@ -72,13 +72,13 @@ static ssize_t rio_read(rio_t *rp, char *usrbuf, size_t n)
     }
     
     // 从rio的内部缓存复制min(n, rp->rio_cnt)个字节到用户缓存
-    cnt = 0;
+    cnt = n;
     if (rp->rio_cnt < n)  //从内部缓存中读到的字符数少于n
         cnt = rp->rio_cnt;   
-   memcpy(usrbuf, rp->rio_bufptr, cnt);
-   rp->rio_bufptr += cnt;
-   rp->rio_cnt -= cnt;
-   return cnt;  
+    memcpy(usrbuf, rp->rio_bufptr, cnt);
+    rp->rio_bufptr += cnt;
+    rp->rio_cnt -= cnt;
+    return cnt;  
 }
 
 //用要读的文件描述符fd初始化rio_t数据结构
