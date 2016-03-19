@@ -19,8 +19,8 @@ void do_http_1_0(int fd)
     /* 读入请求头 */
     Rio_readinitb(&rio, fd);
     if (!Rio_readlineb(&rio, buf, MAXLINE)){
-        clienterror(fd, method, "505", "Inner error",
-                "Some Inner error happen");
+        clienterror(fd, method, "500", "Inner error",
+                "Azha's inner error");
         return;
     }
     printf("%s", buf);
